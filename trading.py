@@ -2,10 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 
 
-# =========================================================
-# تنظیمات ظاهری
-# =========================================================
-
 BG_COLOR = "#EAF2F8"
 TEXT_COLOR = "#17202A"
 ACCENT_COLOR = "#5DADE2"
@@ -15,14 +11,9 @@ FONT_SECTION = ("Segoe UI", 12, "bold")
 FONT_CHECK = ("Segoe UI", 10, "bold")
 
 
-# =========================================================
-# برنامه اصلی
-# =========================================================
-
 class TradingApp:
 
     def __init__(self, root):
-
         self.root = root
         self.root.title("Trading Analysis")
         self.root.geometry("750x800")
@@ -61,11 +52,6 @@ class TradingApp:
         self.create_market(notebook, "Gbp")
         self.create_market(notebook, "Gold")
 
-
-    # =====================================================
-    # ساخت هر بازار
-    # =====================================================
-
     def create_market(self, notebook, market_name):
 
         frame = tk.Frame(
@@ -73,12 +59,8 @@ class TradingApp:
             bg=BG_COLOR
         )
 
-        notebook.add(
-            frame,
-            text=market_name
-        )
+        notebook.add(frame, text=market_name)
 
-        # عنوان
         tk.Label(
             frame,
             text=market_name,
@@ -102,26 +84,17 @@ class TradingApp:
             padx=25
         )
 
-
-        # =================================================
-        # ساخت متغیرها به صورت جدا برای هر مرحله
-        # =================================================
-
+        # متغیرهای جدا برای هر مرحله
         stage1_vars = {}
         stage2_vars = {}
         stage3_vars = {}
         stage4_vars = {}
 
-
-        # =================================================
-        # تابع ساخت چک‌باکس
-        # =================================================
-
         def make_checkbox(parent, text, variables):
 
             var = tk.BooleanVar(value=False)
 
-            cb = tk.Checkbutton(
+            checkbox = tk.Checkbutton(
                 parent,
                 text=text,
                 variable=var,
@@ -136,11 +109,10 @@ class TradingApp:
 
             variables[text] = var
 
-            return cb
-
+            return checkbox
 
         # =================================================
-        # مرحله اول
+        # مرحله ۱
         # =================================================
 
         stage1 = tk.Frame(
@@ -197,9 +169,8 @@ class TradingApp:
             side="left"
         )
 
-
         # =================================================
-        # مرحله دوم
+        # مرحله ۲
         # =================================================
 
         stage2 = tk.Frame(
@@ -256,13 +227,10 @@ class TradingApp:
             stage2_options,
             "SMT",
             stage2_vars
-        ).pack(
-            side="left"
-        )
-
+        ).pack(side="left")
 
         # =================================================
-        # مرحله سوم
+        # مرحله ۳
         # =================================================
 
         stage3 = tk.Frame(
@@ -337,13 +305,10 @@ class TradingApp:
             stage3_options,
             "IFVG",
             stage3_vars
-        ).pack(
-            side="left"
-        )
-
+        ).pack(side="left")
 
         # =================================================
-        # مرحله چهارم
+        # مرحله ۴
         # =================================================
 
         stage4 = tk.Frame(
@@ -391,89 +356,58 @@ class TradingApp:
             stage4_options,
             "IFVG",
             stage4_vars
-        ).pack(
-            side="left"
-        )
-
+        ).pack(side="left")
 
         # =================================================
-        # مرحله دوم بر اساس مرحله اول
+        # نمایش مرحله ۲
         # =================================================
 
         def check_stage2():
 
-            if any(var.get() for var in stage1_vars.values()):
-
+            if any(stage1_vars.values()):
                 if not stage2.winfo_ismapped():
                     stage2.pack(
                         anchor="w",
                         fill="x",
                         pady=(15, 0)
                     )
-
             else:
-
                 stage2.pack_forget()
                 stage3.pack_forget()
                 stage4.pack_forget()
 
-
         # =================================================
-        # مرحله سوم فقط بر اساس گزینه‌های مرحله دوم
+        # نمایش مرحله ۳
         # =================================================
 
         def check_stage3():
 
-            if any(var.get() for var in stage2_vars.values()):
-
+            if any(stage2_vars.values()):
                 if not stage3.winfo_ismapped():
                     stage3.pack(
                         anchor="w",
                         fill="x",
                         pady=(15, 0)
                     )
-
             else:
-
                 stage3.pack_forget()
                 stage4.pack_forget()
 
-
         # =================================================
-        # مرحله چهارم فقط بر اساس گزینه‌های مرحله سوم
+        # نمایش مرحله ۴
         # =================================================
 
         def check_stage4():
 
-            if any(var.get() for var in stage3_vars.values()):
-
+            if any(stage3_vars.values()):
                 if not stage4.winfo_ismapped():
                     stage4.pack(
                         anchor="w",
                         fill="x",
                         pady=(15, 0)
                     )
-
             else:
-
                 stage4.pack_forget()
-
-
-        # =================================================
-        # آپدیت
-        # =================================================
-
-        def update():
-
-            check_stage2()
-            check_stage3()
-            check_stage4()
-
-            self.root.after(
-                100,
-                update
-            )
-
 
         # =================================================
         # ریست
@@ -494,6 +428,17 @@ class TradingApp:
             stage3.pack_forget()
             stage4.pack_forget()
 
+        # =================================================
+        # آپدیت
+        # =================================================
+
+        def update():
+
+            check_stage2()
+            check_stage3()
+            check_stage4()
+
+            self.root.after(100, update)
 
         # =================================================
         # دکمه ریست
@@ -525,7 +470,6 @@ class TradingApp:
 # =========================================================
 
 if __name__ == "__main__":
-
     root = tk.Tk()
     app = TradingApp(root)
     root.mainloop()
