@@ -12,7 +12,7 @@ ACCENT_COLOR = "#5DADE2"
 
 FONT_TITLE = ("Segoe UI", 16, "bold")
 FONT_SECTION = ("Segoe UI", 12, "bold")
-FONT_CHECK = ("Segoe UI", 11, "bold")
+FONT_CHECK = ("Segoe UI", 10, "bold")
 
 
 # =========================================================
@@ -24,10 +24,9 @@ class TradingApp:
     def __init__(self, root):
 
         self.root = root
-
         self.root.title("Trading Analysis")
-        self.root.geometry("700x800")
-        self.root.minsize(600, 650)
+        self.root.geometry("750x800")
+        self.root.minsize(650, 650)
         self.root.configure(bg=BG_COLOR)
 
         style = ttk.Style()
@@ -50,7 +49,6 @@ class TradingApp:
         )
 
         notebook = ttk.Notebook(root)
-
         notebook.pack(
             fill="both",
             expand=True,
@@ -58,7 +56,6 @@ class TradingApp:
             pady=15
         )
 
-        # چهار بازار
         self.create_market(notebook, "Eur")
         self.create_market(notebook, "Nasdaq")
         self.create_market(notebook, "Gbp")
@@ -66,7 +63,7 @@ class TradingApp:
 
 
     # =====================================================
-    # ساخت بازار
+    # ساخت هر بازار
     # =====================================================
 
     def create_market(self, notebook, market_name):
@@ -81,29 +78,18 @@ class TradingApp:
             text=market_name
         )
 
-
-        # =================================================
-        # عنوان بازار
-        # =================================================
-
-        title = tk.Label(
+        # عنوان
+        tk.Label(
             frame,
             text=market_name,
             bg=BG_COLOR,
             fg=TEXT_COLOR,
             font=FONT_TITLE
-        )
-
-        title.pack(
+        ).pack(
             anchor="w",
             padx=25,
             pady=(20, 10)
         )
-
-
-        # =================================================
-        # کانتینر
-        # =================================================
 
         container = tk.Frame(
             frame,
@@ -118,34 +104,37 @@ class TradingApp:
 
 
         # =================================================
-        # متغیرهای چک‌باکس
+        # ساخت متغیرها به صورت جدا برای هر مرحله
         # =================================================
 
-        variables = {}
+        stage1_vars = {}
+        stage2_vars = {}
+        stage3_vars = {}
+        stage4_vars = {}
 
 
         # =================================================
-        # ساخت چک‌باکس
+        # تابع ساخت چک‌باکس
         # =================================================
 
-        def checkbox(parent, name):
+        def make_checkbox(parent, text, variables):
 
             var = tk.BooleanVar(value=False)
 
             cb = tk.Checkbutton(
                 parent,
-                text=name,
+                text=text,
                 variable=var,
                 bg=BG_COLOR,
                 activebackground=BG_COLOR,
                 fg=TEXT_COLOR,
                 activeforeground=TEXT_COLOR,
                 font=FONT_CHECK,
-                anchor="w",
-                selectcolor="white"
+                selectcolor="white",
+                anchor="w"
             )
 
-            variables[name] = var
+            variables[text] = var
 
             return cb
 
@@ -172,7 +161,6 @@ class TradingApp:
             font=FONT_SECTION
         ).pack(anchor="w")
 
-
         stage1_options = tk.Frame(
             stage1,
             bg=BG_COLOR
@@ -180,29 +168,34 @@ class TradingApp:
 
         stage1_options.pack(
             anchor="w",
-            padx=30
+            padx=20
         )
 
-
-        daily_hunt = checkbox(
+        make_checkbox(
             stage1_options,
-            "هانت"
+            "هانت",
+            stage1_vars
+        ).pack(
+            side="left",
+            padx=(0, 20)
         )
 
-        daily_continue = checkbox(
+        make_checkbox(
             stage1_options,
-            "ادامه دار"
+            "ادامه دار",
+            stage1_vars
+        ).pack(
+            side="left",
+            padx=(0, 20)
         )
 
-        daily_none = checkbox(
+        make_checkbox(
             stage1_options,
-            "هیچکدام"
+            "هیچکدام",
+            stage1_vars
+        ).pack(
+            side="left"
         )
-
-
-        daily_hunt.pack(anchor="w")
-        daily_continue.pack(anchor="w")
-        daily_none.pack(anchor="w")
 
 
         # =================================================
@@ -222,7 +215,6 @@ class TradingApp:
             font=FONT_SECTION
         ).pack(anchor="w")
 
-
         stage2_options = tk.Frame(
             stage2,
             bg=BG_COLOR
@@ -230,35 +222,43 @@ class TradingApp:
 
         stage2_options.pack(
             anchor="w",
-            padx=30
+            padx=20
         )
 
-
-        direction_hunt = checkbox(
+        make_checkbox(
             stage2_options,
-            "هانت"
+            "هانت",
+            stage2_vars
+        ).pack(
+            side="left",
+            padx=(0, 20)
         )
 
-        direction_bos = checkbox(
+        make_checkbox(
             stage2_options,
-            "BOS"
+            "BOS",
+            stage2_vars
+        ).pack(
+            side="left",
+            padx=(0, 20)
         )
 
-        direction_liquidity = checkbox(
+        make_checkbox(
             stage2_options,
-            "نقدینگی"
+            "نقدینگی",
+            stage2_vars
+        ).pack(
+            side="left",
+            padx=(0, 20)
         )
 
-        direction_smt = checkbox(
+        make_checkbox(
             stage2_options,
-            "SMT"
+            "SMT",
+            stage2_vars
+        ).pack(
+            side="left"
         )
-
-
-        direction_hunt.pack(anchor="w")
-        direction_bos.pack(anchor="w")
-        direction_liquidity.pack(anchor="w")
-        direction_smt.pack(anchor="w")
 
 
         # =================================================
@@ -278,7 +278,6 @@ class TradingApp:
             font=FONT_SECTION
         ).pack(anchor="w")
 
-
         stage3_options = tk.Frame(
             stage3,
             bg=BG_COLOR
@@ -286,47 +285,61 @@ class TradingApp:
 
         stage3_options.pack(
             anchor="w",
-            padx=30
+            padx=20
         )
 
-
-        sdp = checkbox(
+        make_checkbox(
             stage3_options,
-            "Sdp"
+            "Sdp",
+            stage3_vars
+        ).pack(
+            side="left",
+            padx=(0, 15)
         )
 
-        leg_hunt = checkbox(
+        make_checkbox(
             stage3_options,
-            "هانت لگ"
+            "هانت لگ",
+            stage3_vars
+        ).pack(
+            side="left",
+            padx=(0, 15)
         )
 
-        low_bos = checkbox(
+        make_checkbox(
             stage3_options,
-            "BOS"
+            "BOS",
+            stage3_vars
+        ).pack(
+            side="left",
+            padx=(0, 15)
         )
 
-        ob = checkbox(
+        make_checkbox(
             stage3_options,
-            "OB"
+            "OB",
+            stage3_vars
+        ).pack(
+            side="left",
+            padx=(0, 15)
         )
 
-        fvg = checkbox(
+        make_checkbox(
             stage3_options,
-            "FVG"
+            "FVG",
+            stage3_vars
+        ).pack(
+            side="left",
+            padx=(0, 15)
         )
 
-        ifvg = checkbox(
+        make_checkbox(
             stage3_options,
-            "IFVG"
+            "IFVG",
+            stage3_vars
+        ).pack(
+            side="left"
         )
-
-
-        sdp.pack(anchor="w")
-        leg_hunt.pack(anchor="w")
-        low_bos.pack(anchor="w")
-        ob.pack(anchor="w")
-        fvg.pack(anchor="w")
-        ifvg.pack(anchor="w")
 
 
         # =================================================
@@ -346,7 +359,6 @@ class TradingApp:
             font=FONT_SECTION
         ).pack(anchor="w")
 
-
         stage4_options = tk.Frame(
             stage4,
             bg=BG_COLOR
@@ -354,48 +366,50 @@ class TradingApp:
 
         stage4_options.pack(
             anchor="w",
-            padx=30
+            padx=20
         )
 
-
-        mss = checkbox(
+        make_checkbox(
             stage4_options,
-            "MSS"
+            "MSS",
+            stage4_vars
+        ).pack(
+            side="left",
+            padx=(0, 25)
         )
 
-        cisd = checkbox(
+        make_checkbox(
             stage4_options,
-            "CISD"
+            "CISD",
+            stage4_vars
+        ).pack(
+            side="left",
+            padx=(0, 25)
         )
 
-        entry_ifvg = checkbox(
+        make_checkbox(
             stage4_options,
-            "IFVG"
+            "IFVG",
+            stage4_vars
+        ).pack(
+            side="left"
         )
-
-
-        mss.pack(anchor="w")
-        cisd.pack(anchor="w")
-        entry_ifvg.pack(anchor="w")
 
 
         # =================================================
-        # نمایش مرحله دوم
+        # مرحله دوم بر اساس مرحله اول
         # =================================================
 
         def check_stage2():
 
-            if (
-                variables["هانت"].get()
-                or variables["ادامه دار"].get()
-                or variables["هیچکدام"].get()
-            ):
+            if any(var.get() for var in stage1_vars.values()):
 
-                stage2.pack(
-                    anchor="w",
-                    fill="x",
-                    pady=(15, 0)
-                )
+                if not stage2.winfo_ismapped():
+                    stage2.pack(
+                        anchor="w",
+                        fill="x",
+                        pady=(15, 0)
+                    )
 
             else:
 
@@ -405,23 +419,19 @@ class TradingApp:
 
 
         # =================================================
-        # نمایش مرحله سوم
+        # مرحله سوم فقط بر اساس گزینه‌های مرحله دوم
         # =================================================
 
         def check_stage3():
 
-            if (
-                variables["هانت"].get()
-                or variables["BOS"].get()
-                or variables["نقدینگی"].get()
-                or variables["SMT"].get()
-            ):
+            if any(var.get() for var in stage2_vars.values()):
 
-                stage3.pack(
-                    anchor="w",
-                    fill="x",
-                    pady=(15, 0)
-                )
+                if not stage3.winfo_ismapped():
+                    stage3.pack(
+                        anchor="w",
+                        fill="x",
+                        pady=(15, 0)
+                    )
 
             else:
 
@@ -430,24 +440,19 @@ class TradingApp:
 
 
         # =================================================
-        # نمایش مرحله چهارم
+        # مرحله چهارم فقط بر اساس گزینه‌های مرحله سوم
         # =================================================
 
         def check_stage4():
 
-            if (
-                variables["Sdp"].get()
-                or variables["هانت لگ"].get()
-                or variables["OB"].get()
-                or variables["FVG"].get()
-                or variables["IFVG"].get()
-            ):
+            if any(var.get() for var in stage3_vars.values()):
 
-                stage4.pack(
-                    anchor="w",
-                    fill="x",
-                    pady=(15, 0)
-                )
+                if not stage4.winfo_ismapped():
+                    stage4.pack(
+                        anchor="w",
+                        fill="x",
+                        pady=(15, 0)
+                    )
 
             else:
 
@@ -476,8 +481,14 @@ class TradingApp:
 
         def reset():
 
-            for var in variables.values():
-                var.set(False)
+            for variables in (
+                stage1_vars,
+                stage2_vars,
+                stage3_vars,
+                stage4_vars
+            ):
+                for var in variables.values():
+                    var.set(False)
 
             stage2.pack_forget()
             stage3.pack_forget()
@@ -488,7 +499,7 @@ class TradingApp:
         # دکمه ریست
         # =================================================
 
-        reset_button = tk.Button(
+        tk.Button(
             frame,
             text="🔄 ریست",
             command=reset,
@@ -501,15 +512,11 @@ class TradingApp:
             cursor="hand2",
             padx=25,
             pady=8
-        )
-
-        reset_button.pack(
+        ).pack(
             side="bottom",
             pady=20
         )
 
-
-        # شروع بررسی
         update()
 
 
@@ -520,7 +527,5 @@ class TradingApp:
 if __name__ == "__main__":
 
     root = tk.Tk()
-
     app = TradingApp(root)
-
     root.mainloop()
