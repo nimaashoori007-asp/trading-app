@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 
 
+# =========================================================
+# تنظیمات ظاهری
+# =========================================================
+
 BG_COLOR = "#EAF2F8"
 TEXT_COLOR = "#17202A"
 ACCENT_COLOR = "#5DADE2"
@@ -11,10 +15,16 @@ FONT_SECTION = ("Segoe UI", 12, "bold")
 FONT_CHECK = ("Segoe UI", 10, "bold")
 
 
+# =========================================================
+# برنامه اصلی
+# =========================================================
+
 class TradingApp:
 
     def __init__(self, root):
+
         self.root = root
+
         self.root.title("Trading Analysis")
         self.root.geometry("750x800")
         self.root.minsize(650, 650)
@@ -40,6 +50,7 @@ class TradingApp:
         )
 
         notebook = ttk.Notebook(root)
+
         notebook.pack(
             fill="both",
             expand=True,
@@ -52,6 +63,11 @@ class TradingApp:
         self.create_market(notebook, "Gbp")
         self.create_market(notebook, "Gold")
 
+
+    # =====================================================
+    # ساخت بازار
+    # =====================================================
+
     def create_market(self, notebook, market_name):
 
         frame = tk.Frame(
@@ -59,7 +75,14 @@ class TradingApp:
             bg=BG_COLOR
         )
 
-        notebook.add(frame, text=market_name)
+        notebook.add(
+            frame,
+            text=market_name
+        )
+
+        # =================================================
+        # عنوان
+        # =================================================
 
         tk.Label(
             frame,
@@ -84,11 +107,20 @@ class TradingApp:
             padx=25
         )
 
-        # متغیرهای جدا برای هر مرحله
+
+        # =================================================
+        # متغیرهای جداگانه برای هر مرحله
+        # =================================================
+
         stage1_vars = {}
         stage2_vars = {}
         stage3_vars = {}
         stage4_vars = {}
+
+
+        # =================================================
+        # ساخت چک‌باکس
+        # =================================================
 
         def make_checkbox(parent, text, variables):
 
@@ -111,8 +143,9 @@ class TradingApp:
 
             return checkbox
 
+
         # =================================================
-        # مرحله ۱
+        # مرحله اول
         # =================================================
 
         stage1 = tk.Frame(
@@ -169,8 +202,9 @@ class TradingApp:
             side="left"
         )
 
+
         # =================================================
-        # مرحله ۲
+        # مرحله دوم
         # =================================================
 
         stage2 = tk.Frame(
@@ -227,10 +261,13 @@ class TradingApp:
             stage2_options,
             "SMT",
             stage2_vars
-        ).pack(side="left")
+        ).pack(
+            side="left"
+        )
+
 
         # =================================================
-        # مرحله ۳
+        # مرحله سوم
         # =================================================
 
         stage3 = tk.Frame(
@@ -305,10 +342,13 @@ class TradingApp:
             stage3_options,
             "IFVG",
             stage3_vars
-        ).pack(side="left")
+        ).pack(
+            side="left"
+        )
+
 
         # =================================================
-        # مرحله ۴
+        # مرحله چهارم
         # =================================================
 
         stage4 = tk.Frame(
@@ -356,58 +396,97 @@ class TradingApp:
             stage4_options,
             "IFVG",
             stage4_vars
-        ).pack(side="left")
+        ).pack(
+            side="left"
+        )
+
 
         # =================================================
-        # نمایش مرحله ۲
+        # بررسی مرحله دوم
         # =================================================
 
         def check_stage2():
 
-            if any(stage1_vars.values()):
+            if any(var.get() for var in stage1_vars.values()):
+
                 if not stage2.winfo_ismapped():
+
                     stage2.pack(
                         anchor="w",
                         fill="x",
                         pady=(15, 0)
                     )
+
             else:
+
                 stage2.pack_forget()
+
+                # اگر مرحله 1 خاموش شد،
+                # مراحل بعدی هم خاموش شوند
                 stage3.pack_forget()
                 stage4.pack_forget()
 
+                for var in stage2_vars.values():
+                    var.set(False)
+
+                for var in stage3_vars.values():
+                    var.set(False)
+
+                for var in stage4_vars.values():
+                    var.set(False)
+
+
         # =================================================
-        # نمایش مرحله ۳
+        # بررسی مرحله سوم
         # =================================================
 
         def check_stage3():
 
-            if any(stage2_vars.values()):
+            if any(var.get() for var in stage2_vars.values()):
+
                 if not stage3.winfo_ismapped():
+
                     stage3.pack(
                         anchor="w",
                         fill="x",
                         pady=(15, 0)
                     )
+
             else:
+
                 stage3.pack_forget()
                 stage4.pack_forget()
 
+                for var in stage3_vars.values():
+                    var.set(False)
+
+                for var in stage4_vars.values():
+                    var.set(False)
+
+
         # =================================================
-        # نمایش مرحله ۴
+        # بررسی مرحله چهارم
         # =================================================
 
         def check_stage4():
 
-            if any(stage3_vars.values()):
+            if any(var.get() for var in stage3_vars.values()):
+
                 if not stage4.winfo_ismapped():
+
                     stage4.pack(
                         anchor="w",
                         fill="x",
                         pady=(15, 0)
                     )
+
             else:
+
                 stage4.pack_forget()
+
+                for var in stage4_vars.values():
+                    var.set(False)
+
 
         # =================================================
         # ریست
@@ -421,12 +500,14 @@ class TradingApp:
                 stage3_vars,
                 stage4_vars
             ):
+
                 for var in variables.values():
                     var.set(False)
 
             stage2.pack_forget()
             stage3.pack_forget()
             stage4.pack_forget()
+
 
         # =================================================
         # آپدیت
@@ -438,7 +519,11 @@ class TradingApp:
             check_stage3()
             check_stage4()
 
-            self.root.after(100, update)
+            self.root.after(
+                100,
+                update
+            )
+
 
         # =================================================
         # دکمه ریست
@@ -462,6 +547,16 @@ class TradingApp:
             pady=20
         )
 
+
+        # =================================================
+        # خیلی مهم:
+        # مراحل ۲، ۳ و ۴ از ابتدا مخفی باشند
+        # =================================================
+
+        stage2.pack_forget()
+        stage3.pack_forget()
+        stage4.pack_forget()
+
         update()
 
 
@@ -470,6 +565,9 @@ class TradingApp:
 # =========================================================
 
 if __name__ == "__main__":
+
     root = tk.Tk()
+
     app = TradingApp(root)
+
     root.mainloop()
