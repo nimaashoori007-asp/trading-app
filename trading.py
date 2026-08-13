@@ -35,9 +35,14 @@ class TradingApp:
         self.root = root
 
         self.root.title("Trading Analysis")
-        self.root.geometry("820x850")
-        self.root.minsize(700, 700)
-        self.root.configure(bg=BG_COLOR)
+
+        # پنجره بلندتر تا چهار مرحله بدون اسکرول جا شوند
+        self.root.geometry("820x950")
+        self.root.minsize(750, 850)
+
+        self.root.configure(
+            bg=BG_COLOR
+        )
 
         self.setup_style()
 
@@ -58,10 +63,25 @@ class TradingApp:
         # بازارها
         # =================================================
 
-        self.create_market(self.notebook, "Eur")
-        self.create_market(self.notebook, "Nasdaq")
-        self.create_market(self.notebook, "Gbp")
-        self.create_market(self.notebook, "Gold")
+        self.create_market(
+            self.notebook,
+            "Eur"
+        )
+
+        self.create_market(
+            self.notebook,
+            "Nasdaq"
+        )
+
+        self.create_market(
+            self.notebook,
+            "Gbp"
+        )
+
+        self.create_market(
+            self.notebook,
+            "Gold"
+        )
 
 
     # =====================================================
@@ -106,7 +126,11 @@ class TradingApp:
     # ساخت بازار
     # =====================================================
 
-    def create_market(self, notebook, market_name):
+    def create_market(
+        self,
+        notebook,
+        market_name
+    ):
 
         # =================================================
         # صفحه بازار
@@ -124,7 +148,7 @@ class TradingApp:
 
 
         # =================================================
-        # متغیرهای مراحل
+        # متغیرها
         # =================================================
 
         stage1_vars = {}
@@ -132,10 +156,21 @@ class TradingApp:
         stage3_vars = {}
         stage4_vars = {}
 
-        stage1_backtest = tk.BooleanVar(value=False)
-        stage2_backtest = tk.BooleanVar(value=False)
-        stage3_backtest = tk.BooleanVar(value=False)
-        stage4_backtest = tk.BooleanVar(value=False)
+        stage1_backtest = tk.BooleanVar(
+            value=False
+        )
+
+        stage2_backtest = tk.BooleanVar(
+            value=False
+        )
+
+        stage3_backtest = tk.BooleanVar(
+            value=False
+        )
+
+        stage4_backtest = tk.BooleanVar(
+            value=False
+        )
 
 
         # =================================================
@@ -150,7 +185,7 @@ class TradingApp:
         header.pack(
             fill="x",
             padx=28,
-            pady=(22, 10)
+            pady=(18, 8)
         )
 
 
@@ -187,12 +222,26 @@ class TradingApp:
             font=FONT_MARKET
         ).pack(
             anchor="w",
-            pady=(2, 0)
+            pady=(1, 0)
         )
 
 
         # =================================================
-        # جداکننده
+        # دکمه ریست
+        # =================================================
+
+        reset_button_frame = tk.Frame(
+            header,
+            bg=BG_COLOR
+        )
+
+        reset_button_frame.pack(
+            side="right"
+        )
+
+
+        # =================================================
+        # خط جداکننده
         # =================================================
 
         separator = tk.Frame(
@@ -204,114 +253,53 @@ class TradingApp:
         separator.pack(
             fill="x",
             padx=28,
-            pady=(0, 18)
+            pady=(0, 14)
         )
 
 
         # =================================================
-        # Scroll Area
+        # کانتینر مراحل
         # =================================================
 
-        outer = tk.Frame(
+        content = tk.Frame(
             page,
             bg=BG_COLOR
         )
 
-        outer.pack(
+        content.pack(
             fill="both",
             expand=True,
             padx=28,
-            pady=(0, 20)
-        )
-
-
-        canvas = tk.Canvas(
-            outer,
-            bg=BG_COLOR,
-            highlightthickness=0,
-            bd=0
-        )
-
-        scrollbar = ttk.Scrollbar(
-            outer,
-            orient="vertical",
-            command=canvas.yview
-        )
-
-        content = tk.Frame(
-            canvas,
-            bg=BG_COLOR
-        )
-
-
-        content_window = canvas.create_window(
-            (0, 0),
-            window=content,
-            anchor="nw"
-        )
-
-
-        canvas.configure(
-            yscrollcommand=scrollbar.set
-        )
-
-
-        canvas.pack(
-            side="left",
-            fill="both",
-            expand=True
-        )
-
-        scrollbar.pack(
-            side="right",
-            fill="y"
-        )
-
-
-        def update_scroll_region(event=None):
-
-            canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
-
-
-        content.bind(
-            "<Configure>",
-            update_scroll_region
-        )
-
-
-        def resize_content(event):
-
-            canvas.itemconfigure(
-                content_window,
-                width=event.width
-            )
-
-
-        canvas.bind(
-            "<Configure>",
-            resize_content
+            pady=(0, 10)
         )
 
 
         # =================================================
-        # ابزارهای کمکی
+        # ابزار پاک کردن متغیرها
         # =================================================
 
-        def clear_variables(variables):
+        def clear_variables(
+            variables
+        ):
 
             for var in variables.values():
+
                 var.set(False)
 
 
         # =================================================
-        # ساخت چک‌باکس معمولی
+        # ساخت چک‌باکس
         # =================================================
 
-        def make_checkbox(parent, text, variables):
+        def make_checkbox(
+            parent,
+            text,
+            variables
+        ):
 
-            var = tk.BooleanVar(value=False)
+            var = tk.BooleanVar(
+                value=False
+            )
 
             checkbox = tk.Checkbutton(
                 parent,
@@ -327,7 +315,7 @@ class TradingApp:
                 bd=0,
                 highlightthickness=0,
                 padx=3,
-                pady=4,
+                pady=2,
                 cursor="hand2"
             )
 
@@ -337,10 +325,14 @@ class TradingApp:
 
 
         # =================================================
-        # ساخت بخش بکتست
+        # ساخت بکتست
         # =================================================
 
-        def make_backtest(parent, variable, command):
+        def make_backtest(
+            parent,
+            variable,
+            command
+        ):
 
             backtest_frame = tk.Frame(
                 parent,
@@ -348,7 +340,6 @@ class TradingApp:
                 highlightbackground=BACKTEST_BORDER,
                 highlightthickness=1
             )
-
 
             checkbox = tk.Checkbutton(
                 backtest_frame,
@@ -365,7 +356,7 @@ class TradingApp:
                 bd=0,
                 highlightthickness=0,
                 padx=10,
-                pady=8,
+                pady=5,
                 cursor="hand2"
             )
 
@@ -387,18 +378,21 @@ class TradingApp:
 
 
         # =================================================
-        # نمایش مرحله دوم
+        # مرحله دوم
         # =================================================
 
         def check_stage2():
 
             if stage1_backtest.get():
 
-                if stage2 is not None and not stage2.winfo_ismapped():
+                if (
+                    stage2 is not None
+                    and not stage2.winfo_ismapped()
+                ):
 
                     stage2.pack(
                         fill="x",
-                        pady=(0, 24)
+                        pady=(0, 14)
                     )
 
             else:
@@ -412,32 +406,39 @@ class TradingApp:
                 if stage4 is not None:
                     stage4.pack_forget()
 
-                clear_variables(stage2_vars)
-                clear_variables(stage3_vars)
-                clear_variables(stage4_vars)
+                clear_variables(
+                    stage2_vars
+                )
+
+                clear_variables(
+                    stage3_vars
+                )
+
+                clear_variables(
+                    stage4_vars
+                )
 
                 stage2_backtest.set(False)
                 stage3_backtest.set(False)
                 stage4_backtest.set(False)
 
-            canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
-
 
         # =================================================
-        # نمایش مرحله سوم
+        # مرحله سوم
         # =================================================
 
         def check_stage3():
 
             if stage2_backtest.get():
 
-                if stage3 is not None and not stage3.winfo_ismapped():
+                if (
+                    stage3 is not None
+                    and not stage3.winfo_ismapped()
+                ):
 
                     stage3.pack(
                         fill="x",
-                        pady=(0, 24)
+                        pady=(0, 14)
                     )
 
             else:
@@ -448,30 +449,34 @@ class TradingApp:
                 if stage4 is not None:
                     stage4.pack_forget()
 
-                clear_variables(stage3_vars)
-                clear_variables(stage4_vars)
+                clear_variables(
+                    stage3_vars
+                )
+
+                clear_variables(
+                    stage4_vars
+                )
 
                 stage3_backtest.set(False)
                 stage4_backtest.set(False)
 
-            canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
-
 
         # =================================================
-        # نمایش مرحله چهارم
+        # مرحله چهارم
         # =================================================
 
         def check_stage4():
 
             if stage3_backtest.get():
 
-                if stage4 is not None and not stage4.winfo_ismapped():
+                if (
+                    stage4 is not None
+                    and not stage4.winfo_ismapped()
+                ):
 
                     stage4.pack(
                         fill="x",
-                        pady=(0, 24)
+                        pady=(0, 14)
                     )
 
             else:
@@ -479,13 +484,11 @@ class TradingApp:
                 if stage4 is not None:
                     stage4.pack_forget()
 
-                clear_variables(stage4_vars)
+                clear_variables(
+                    stage4_vars
+                )
 
                 stage4_backtest.set(False)
-
-            canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
 
 
         # =================================================
@@ -509,6 +512,7 @@ class TradingApp:
                 highlightthickness=1
             )
 
+
             # -------------------------------------------------
             # Header کارت
             # -------------------------------------------------
@@ -520,12 +524,12 @@ class TradingApp:
 
             card_header.pack(
                 fill="x",
-                padx=18,
-                pady=(16, 12)
+                padx=16,
+                pady=(12, 8)
             )
 
 
-            # شماره مرحله
+            # شماره
 
             number_label = tk.Label(
                 card_header,
@@ -534,7 +538,7 @@ class TradingApp:
                 fg="white",
                 font=("Segoe UI", 10, "bold"),
                 width=3,
-                pady=3
+                pady=2
             )
 
             number_label.pack(
@@ -542,7 +546,10 @@ class TradingApp:
             )
 
 
-            # عنوان
+            # عنوان مرحله
+            #
+            # FONT_SECTION حفظ شده
+            #
 
             tk.Label(
                 card_header,
@@ -552,12 +559,12 @@ class TradingApp:
                 font=FONT_SECTION
             ).pack(
                 side="left",
-                padx=12
+                padx=10
             )
 
 
             # -------------------------------------------------
-            # جداکننده
+            # خط
             # -------------------------------------------------
 
             tk.Frame(
@@ -566,7 +573,7 @@ class TradingApp:
                 height=1
             ).pack(
                 fill="x",
-                padx=18
+                padx=16
             )
 
 
@@ -581,8 +588,8 @@ class TradingApp:
 
             options_frame.pack(
                 fill="x",
-                padx=20,
-                pady=(14, 8)
+                padx=18,
+                pady=(9, 5)
             )
 
 
@@ -594,7 +601,7 @@ class TradingApp:
                     variables
                 ).pack(
                     side="left",
-                    padx=(0, 18)
+                    padx=(0, 16)
                 )
 
 
@@ -610,8 +617,8 @@ class TradingApp:
 
             backtest.pack(
                 fill="x",
-                padx=20,
-                pady=(6, 16)
+                padx=18,
+                pady=(4, 11)
             )
 
 
@@ -619,7 +626,7 @@ class TradingApp:
 
 
         # =================================================
-        # ساخت مرحله ۱
+        # مرحله ۱
         # =================================================
 
         stage1 = create_stage_card(
@@ -638,12 +645,12 @@ class TradingApp:
 
         stage1.pack(
             fill="x",
-            pady=(0, 24)
+            pady=(0, 14)
         )
 
 
         # =================================================
-        # ساخت مرحله ۲
+        # مرحله ۲
         # =================================================
 
         stage2 = create_stage_card(
@@ -663,7 +670,7 @@ class TradingApp:
 
 
         # =================================================
-        # ساخت مرحله ۳
+        # مرحله ۳
         # =================================================
 
         stage3 = create_stage_card(
@@ -685,7 +692,7 @@ class TradingApp:
 
 
         # =================================================
-        # ساخت مرحله ۴
+        # مرحله ۴
         # =================================================
 
         stage4 = create_stage_card(
@@ -704,7 +711,7 @@ class TradingApp:
 
 
         # =================================================
-        # مخفی کردن مراحل ۲، ۳ و ۴
+        # مخفی کردن مراحل بعدی
         # =================================================
 
         stage2.pack_forget()
@@ -713,15 +720,26 @@ class TradingApp:
 
 
         # =================================================
-        # دکمه ریست
+        # ریست
         # =================================================
 
         def reset():
 
-            clear_variables(stage1_vars)
-            clear_variables(stage2_vars)
-            clear_variables(stage3_vars)
-            clear_variables(stage4_vars)
+            clear_variables(
+                stage1_vars
+            )
+
+            clear_variables(
+                stage2_vars
+            )
+
+            clear_variables(
+                stage3_vars
+            )
+
+            clear_variables(
+                stage4_vars
+            )
 
             stage1_backtest.set(False)
             stage2_backtest.set(False)
@@ -732,19 +750,13 @@ class TradingApp:
             stage3.pack_forget()
             stage4.pack_forget()
 
-            canvas.yview_moveto(0)
-
-            canvas.configure(
-                scrollregion=canvas.bbox("all")
-            )
-
 
         # =================================================
-        # ساخت دکمه ریست
+        # دکمه ریست
         # =================================================
 
         reset_button = tk.Button(
-            header,
+            reset_button_frame,
             text="↻  ریست",
             command=reset,
             bg=ACCENT_COLOR,
@@ -754,15 +766,12 @@ class TradingApp:
             font=("Segoe UI", 10, "bold"),
             relief="flat",
             cursor="hand2",
-            padx=22,
-            pady=8,
+            padx=20,
+            pady=7,
             bd=0
         )
 
-        reset_button.pack(
-            side="right",
-            pady=5
-        )
+        reset_button.pack()
 
 
 # =========================================================
